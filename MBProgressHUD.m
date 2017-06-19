@@ -56,6 +56,20 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 
 @implementation MBProgressHUD
 
+#pragma mark - InteractivePopGestureRecognizer
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+#if !TARGET_OS_TV
+    //Disable interactivePop when added to UINavigationController.view
+    if ([self.superview.nextResponder isKindOfClass:[UINavigationController class]]) {
+        if (gestureRecognizer == ((UINavigationController *)self.superview.nextResponder).interactivePopGestureRecognizer) {
+            return NO;
+        }
+    }
+#endif
+    return YES;
+}
+
 #pragma mark - Class methods
 
 + (instancetype)showHUDAddedTo:(UIView *)view animated:(BOOL)animated {
